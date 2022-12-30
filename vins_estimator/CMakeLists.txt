@@ -17,9 +17,8 @@ find_package(catkin REQUIRED COMPONENTS
   camera_models
   image_transport)
 
-list(APPEND CMAKE_PREFIX_PATH /usr/local/lib)
 
-find_package(OpenCV 4.2 REQUIRED PATHS /usr/local/lib/cmake/opencv4 NO_DEFAULT_PATH)
+find_package(OpenCV 4 REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3)
 
