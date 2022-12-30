@@ -13,15 +13,15 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Boost REQUIRED COMPONENTS filesystem program_options system)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(OpenCV 4 REQUIRED)
+find_package(OpenCV 4 REQUIRED HINTS /usr/local/lib/cmake/opencv4 NO_DEFAULT_PATH)
 
 # set(EIGEN_INCLUDE_DIR "/usr/local/include/eigen3")
 find_package(Ceres REQUIRED)
 include_directories(${CERES_INCLUDE_DIRS})
 
-
+file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include/camera_models)
 catkin_package(
-    INCLUDE_DIRS include
+    INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/include/camera_models
     LIBRARIES camera_models
     CATKIN_DEPENDS roscpp std_msgs
 #    DEPENDS system_lib
@@ -31,7 +31,7 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     )
 
-include_directories("include")
+include_directories(include)
 
 add_executable(Calibrations 
     src/intrinsic_calib.cc
@@ -66,3 +66,13 @@ add_library(camera_models
 
 target_link_libraries(Calibrations ${Boost_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES})
 target_link_libraries(camera_models ${Boost_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES})
+
+install(
+  TARGETS Calibrations camera_models
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY include/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+        MESSAGE(WARNING "dst:  ${CATKIN_PACKAGE_INCLUDE_DESTINATION}")
